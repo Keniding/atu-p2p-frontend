@@ -1,3 +1,4 @@
+-- Create tables
 CREATE TABLE bus_locations (
   id           UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   device_id    TEXT NOT NULL,
@@ -21,11 +22,14 @@ CREATE TABLE bus_lines (
   active   BOOLEAN DEFAULT true
 );
 
+-- Enable realtime for bus_locations
 ALTER PUBLICATION supabase_realtime ADD TABLE bus_locations;
 
+-- Create indexes
 CREATE INDEX idx_bus_locations_line    ON bus_locations(bus_line_id);
 CREATE INDEX idx_bus_locations_updated ON bus_locations(updated_at DESC);
 
+-- Cleanup function
 CREATE OR REPLACE FUNCTION cleanup_old_locations()
 RETURNS void AS $$
 BEGIN
@@ -34,6 +38,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Insert default bus lines
 INSERT INTO bus_lines (id, name, color) VALUES
   ('corredor-azul',     'Corredor Azul',     '#2563EB'),
   ('corredor-rojo',     'Corredor Rojo',     '#DC2626'),
@@ -43,3 +48,29 @@ INSERT INTO bus_lines (id, name, color) VALUES
   ('metropolitano',     'Metropolitano',     '#0891B2'),
   ('metro-linea1',      'Metro Linea 1',     '#BE185D'),
   ('metro-linea2',      'Metro Linea 2',     '#B45309');
+
+-- Enable Row Level Security (RLS)
+ALTER TABLE bus_locations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bus_lines ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies for bus_locations (allow anonymous read/write for P2P functionality)
+CREATE POLICY "Anyone can read bus locations"
+  ON bus_locations FOR SELECT
+  USING (true);
+
+CREATE POLICY "Anyone can insert bus locations"
+  ON bus_locations FOR INSERT
+  WITH CHECK (true);
+
+CREATE POLICY "Anyone can update bus locations"
+  ON bus_locations FOR UPDATE
+  USING (true);
+
+CREATE POLICY "Anyone can delete bus locations"
+  ON bus_locations FOR DELETE
+  USING (true);
+
+-- RLS Policies for bus_lines (read-only for everyone)
+CREATE POLICY "Anyone can read bus lines"
+  ON bus_lines FOR SELECT
+  USING (true);
