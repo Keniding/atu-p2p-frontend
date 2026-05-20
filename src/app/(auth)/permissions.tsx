@@ -79,13 +79,13 @@ export default function PermissionsScreen() {
 }
 
 interface PermissionItemProps {
-  icon: string;
-  title: string;
-  description: string;
-  granted: boolean;
+  readonly icon: string;
+  readonly title: string;
+  readonly description: string;
+  readonly granted: boolean;
 }
 
-function PermissionItem({ icon, title, description, granted }: Readonly<PermissionItemProps>) {
+function PermissionItem({ icon, title, description, granted }: PermissionItemProps) {
   return (
     <View style={styles.permissionItem}>
       <Text style={styles.permissionIcon}>{icon}</Text>

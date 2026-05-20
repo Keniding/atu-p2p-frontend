@@ -9,6 +9,10 @@ interface SupabaseFallbackState {
   error: string | null;
 }
 
+function upsertBus(buses: BusPayload[], incoming: BusPayload): BusPayload[] {
+  return buses.filter((b) => b.deviceId !== incoming.deviceId).concat(incoming);
+}
+
 export function useSupabaseFallback(busLineId: string) {
   const [state, setState] = useState<SupabaseFallbackState>({
     isConnected: false,
@@ -22,16 +26,11 @@ export function useSupabaseFallback(busLineId: string) {
     if (!busLineId) return;
 
     channelRef.current = subscribeToBusLine(busLineId, (payload) => {
-      setState((s) => {
-        const filtered = s.nearbyBusesFromServer.filter(
-          (b) => b.deviceId !== payload.deviceId
-        );
-        return {
-          ...s,
-          isConnected: true,
-          nearbyBusesFromServer: [...filtered, payload],
-        };
-      });
+      setState((s) => ({
+        ...s,
+        isConnected: true,
+        nearbyBusesFromServer: upsertBus(s.nearbyBusesFromServer, payload),
+      }));
     });
 
     return () => {

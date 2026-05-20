@@ -6,15 +6,15 @@ interface BusCardProps {
   bus: NearbyBus;
 }
 
+function formatEta(estimatedArrivalSeconds: number): string {
+  if (estimatedArrivalSeconds >= 999) return "Sin datos";
+  const minutes = Math.floor(estimatedArrivalSeconds / 60);
+  const seconds = estimatedArrivalSeconds % 60;
+  return minutes > 0 ? `${minutes}min ${seconds}s` : `${seconds}s`;
+}
+
 export default function BusCard({ bus }: Readonly<BusCardProps>) {
-  const etaMinutes = Math.floor(bus.estimatedArrivalSeconds / 60);
-  const etaSeconds = bus.estimatedArrivalSeconds % 60;
-  const etaLabel =
-    bus.estimatedArrivalSeconds >= 999
-      ? "Sin datos"
-      : etaMinutes > 0
-      ? `${etaMinutes}min ${etaSeconds}s`
-      : `${etaSeconds}s`;
+  const etaLabel = formatEta(bus.estimatedArrivalSeconds);
 
   return (
     <View style={styles.card}>

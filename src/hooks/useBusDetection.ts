@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useReducer, useRef, useState} from "react";
 import * as Location from "expo-location";
 import {
   acceptConnection,
@@ -28,15 +28,50 @@ import {
 import {haversineDistance} from "@/utils/haversine";
 import {estimateArrival, getBusStatus} from "@/utils/etaCalculator";
 
+type P2PAction =
+  | { type: "advertise" }
+  | { type: "discover" }
+  | { type: "peer_added"; peerId: string }
+  | { type: "peer_removed"; peerId: string }
+  | { type: "error"; error: string };
+
+const INITIAL_P2P: P2PState = {
+  isAdvertising: false,
+  isDiscovering: false,
+  connectedPeers: [],
+  error: null,
+};
+
+function p2pReducer(state: P2PState, action: P2PAction): P2PState {
+  switch (action.type) {
+    case "advertise":
+      return { ...state, isAdvertising: true };
+    case "discover":
+      return { ...state, isDiscovering: true };
+    case "peer_added":
+      return { ...state, connectedPeers: [...state.connectedPeers, action.peerId] };
+    case "peer_removed":
+      return { ...state, connectedPeers: state.connectedPeers.filter((id) => id !== action.peerId) };
+    case "error":
+      return { ...state, error: action.error };
+  }
+}
+
+function addOrUpdateBus(buses: NearbyBus[], incoming: NearbyBus): NearbyBus[] {
+  return buses
+    .filter((b) => b.deviceId !== incoming.deviceId)
+    .concat(incoming)
+    .sort((a, b) => a.estimatedArrivalSeconds - b.estimatedArrivalSeconds);
+}
+
+function removeExpiredBuses(buses: NearbyBus[], timeoutMs: number): NearbyBus[] {
+  return buses.filter((b) => Date.now() - b.lastUpdated < timeoutMs);
+}
+
 export function useBusDetection(busLineId: string, isDriver: boolean) {
   const [myLocation, setMyLocation] = useState<Location.LocationObject | null>(null);
   const [nearbyBuses, setNearbyBuses] = useState<NearbyBus[]>([]);
-  const [p2pState, setP2PState] = useState<P2PState>({
-    isAdvertising: false,
-    isDiscovering: false,
-    connectedPeers: [],
-    error: null,
-  });
+  const [p2pState, dispatch] = useReducer(p2pReducer, INITIAL_P2P);
 
   const locationRef    = useRef<Location.LocationObject | null>(null);
   const peersRef       = useRef<string[]>([]);
@@ -50,7 +85,7 @@ export function useBusDetection(busLineId: string, isDriver: boolean) {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setP2PState((s) => ({ ...s, error: "Permiso de ubicacion denegado" }));
+        dispatch({ type: "error", error: "Permiso de ubicacion denegado" });
         return;
       }
       if (isDriver) {
@@ -78,11 +113,11 @@ export function useBusDetection(busLineId: string, isDriver: boolean) {
     (async () => {
       try {
         myPeerIdRef.current = await startAdvertise(SERVICE_ID, Strategy.P2P_CLUSTER);
-        setP2PState((s) => ({ ...s, isAdvertising: true }));
+        dispatch({ type: "advertise" });
         await startDiscovery(SERVICE_ID, Strategy.P2P_CLUSTER);
-        setP2PState((s) => ({ ...s, isDiscovering: true }));
+        dispatch({ type: "discover" });
       } catch (err) {
-        setP2PState((s) => ({ ...s, error: String(err) }));
+        dispatch({ type: "error", error: String(err) });
       }
     })();
     return () => {
@@ -102,59 +137,47 @@ export function useBusDetection(busLineId: string, isDriver: boolean) {
         try {
           await requestConnection(peerId);
         } catch { /* peer may have moved away */ }
+      }),
+      onInvitationReceived(async ({ peerId }) => {
+        try {
+          await acceptConnection(peerId);
+        } catch { /* connection rejected */ }
+      }),
+      onConnected(({ peerId }) => {
+        peersRef.current = [...peersRef.current, peerId];
+        dispatch({ type: "peer_added", peerId });
+      }),
+      onDisconnected(({ peerId }) => {
+        peersRef.current = peersRef.current.filter((id) => id !== peerId);
+        dispatch({ type: "peer_removed", peerId });
+      }),
+      onPeerLost(({ peerId }) => {
+        peersRef.current = peersRef.current.filter((id) => id !== peerId);
+        dispatch({ type: "peer_removed", peerId });
+      }),
+      onTextReceived(({ text }) => {
+        try {
+          const busData: BusPayload = JSON.parse(text);
+          if (!busData.isBusDriver) return;
+          if (busData.busLineId !== busLineId) return;
+          const myLoc = locationRef.current;
+          if (!myLoc) return;
+          const dist = haversineDistance(
+            myLoc.coords.latitude, myLoc.coords.longitude,
+            busData.latitude, busData.longitude
+          );
+          if (dist > MAX_DETECTION_RADIUS_M) return;
+          const eta = estimateArrival(dist, busData.speed);
+          const nearbyBus: NearbyBus = {
+            ...busData,
+            distanceMeters: Math.round(dist),
+            estimatedArrivalSeconds: eta,
+            status: getBusStatus(eta),
+            lastUpdated: Date.now(),
+          };
+          setNearbyBuses((prev) => addOrUpdateBus(prev, nearbyBus));
+        } catch { /* malformed JSON */ }
       })
-        ,
-        onInvitationReceived(async ({peerId}) => {
-          try {
-            await acceptConnection(peerId);
-          } catch { /* connection rejected */
-          }
-        })
-        ,
-        onConnected(({peerId}) => {
-          peersRef.current = [...peersRef.current, peerId];
-          setP2PState((s) => ({...s, connectedPeers: [...peersRef.current]}));
-        })
-        ,
-        onDisconnected(({peerId}) => {
-          peersRef.current = peersRef.current.filter((id) => id !== peerId);
-          setP2PState((s) => ({...s, connectedPeers: [...peersRef.current]}));
-        })
-        ,
-        onPeerLost(({peerId}) => {
-          peersRef.current = peersRef.current.filter((id) => id !== peerId);
-          setP2PState((s) => ({...s, connectedPeers: [...peersRef.current]}));
-        })
-        ,
-        onTextReceived(({text}) => {
-          try {
-            const busData: BusPayload = JSON.parse(text);
-            if (!busData.isBusDriver) return;
-            if (busData.busLineId !== busLineId) return;
-            const myLoc = locationRef.current;
-            if (!myLoc) return;
-            const dist = haversineDistance(
-                myLoc.coords.latitude, myLoc.coords.longitude,
-                busData.latitude, busData.longitude
-            );
-            if (dist > MAX_DETECTION_RADIUS_M) return;
-            const eta = estimateArrival(dist, busData.speed);
-            const nearbyBus: NearbyBus = {
-              ...busData,
-              distanceMeters: Math.round(dist),
-              estimatedArrivalSeconds: eta,
-              status: getBusStatus(eta),
-              lastUpdated: Date.now(),
-            };
-            setNearbyBuses((prev) => {
-              const filtered = prev.filter((b) => b.deviceId !== busData.deviceId);
-              return [...filtered, nearbyBus].sort(
-                  (a, b) => a.estimatedArrivalSeconds - b.estimatedArrivalSeconds
-              );
-            });
-          } catch { /* malformed JSON */
-          }
-        })
     );
 
     return () => { subs.forEach((unsub) => unsub()); };
@@ -200,10 +223,7 @@ export function useBusDetection(busLineId: string, isDriver: boolean) {
   // Cleanup buses perdidos
   useEffect(() => {
     cleanupTimer.current = setInterval(() => {
-      const now = Date.now();
-      setNearbyBuses((prev) =>
-        prev.filter((b) => now - b.lastUpdated < BUS_TIMEOUT_MS)
-      );
+      setNearbyBuses((prev) => removeExpiredBuses(prev, BUS_TIMEOUT_MS));
     }, CLEANUP_INTERVAL_MS);
 
     return () => {
