@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
-import { requestLocationPermissions } from "../services/locationService";
-import { requestNotificationPermissions } from "../services/notificationService";
+import { requestLocationPermissions } from "@/services/locationService";
+import { requestNotificationPermissions } from "@/services/notificationService";
 
 interface PermissionsState {
   locationGranted: boolean;

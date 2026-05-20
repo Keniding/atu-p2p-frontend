@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
-import LineSelector from "../../components/LineSelector";
-import { LIMA_BUS_LINES_FULL } from "../../constants/lines";
+import LineSelector from "@/components/LineSelector";
+import { LIMA_BUS_LINES_FULL } from "@/constants/lines";
 
 export default function LineSelectScreen() {
   const [selectedLine, setSelectedLine] = useState(LIMA_BUS_LINES_FULL[0].id);

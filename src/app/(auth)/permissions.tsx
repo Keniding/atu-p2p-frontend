@@ -7,7 +7,7 @@ import {
   Alert,
 } from "react-native";
 import { router } from "expo-router";
-import { usePermissions } from "../../hooks/usePermissions";
+import { usePermissions } from "@/hooks/usePermissions";
 
 export default function PermissionsScreen() {
   const { locationGranted, notifGranted, isLoading, error, requestAll } =

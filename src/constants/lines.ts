@@ -1,4 +1,4 @@
-import type { BusLine } from "../types/bus.types";
+import type { BusLine } from "@/types/bus.types";
 
 export const LIMA_BUS_LINES = [
   { id: "corredor-azul",     name: "Corredor Azul",     color: "#2563EB" },

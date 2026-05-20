@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
-import type { P2PState } from "../types/bus.types";
+import type { P2PState } from "@/types/bus.types";
 
 interface P2PStatusBarProps {
   p2pState: P2PState;

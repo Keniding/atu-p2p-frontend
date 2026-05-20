@@ -24,7 +24,7 @@ jest.mock("expo-nearby-connections", () => ({
   Strategy: { P2P_CLUSTER: "P2P_CLUSTER" },
 }));
 
-import { useBusDetection } from "../../src/hooks/useBusDetection";
+import { useBusDetection } from "@/hooks/useBusDetection";
 
 describe("useBusDetection", () => {
   it("inicia con estado inicial correcto", () => {

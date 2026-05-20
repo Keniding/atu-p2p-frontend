@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
-import type { BusStatus } from "../types/bus.types";
+import type { BusStatus } from "@/types/bus.types";
 
 const STATUS_CONFIG: Record<BusStatus, { label: string; bg: string; text: string }> = {
   ARRIVING: { label: "Llegando",  bg: "#16A34A", text: "#FFFFFF" },

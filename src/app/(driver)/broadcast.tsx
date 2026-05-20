@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Switch } from "react-native";
-import { useBackgroundLocation } from "../../hooks/useBackgroundLocation";
-import { LIMA_BUS_LINES_FULL } from "../../constants/lines";
-import LineSelector from "../../components/LineSelector";
+import { useBackgroundLocation } from "@/hooks/useBackgroundLocation";
+import { LIMA_BUS_LINES_FULL } from "@/constants/lines";
+import LineSelector from "@/components/LineSelector";
 
 export default function BroadcastScreen() {
   const [selectedLine, setSelectedLine] = useState(LIMA_BUS_LINES_FULL[0].id);

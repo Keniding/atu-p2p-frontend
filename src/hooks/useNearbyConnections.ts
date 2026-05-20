@@ -10,9 +10,9 @@ import {
   acceptConnection,
   type Unsubscribe,
 } from "expo-nearby-connections";
-import type { BusPayload, P2PState } from "../types/bus.types";
-import { SERVICE_ID } from "../constants/config";
-import { startP2P, stopP2P, sendToAllPeers } from "../services/p2pService";
+import type { BusPayload, P2PState } from "@/types/bus.types";
+import { SERVICE_ID } from "@/constants/config";
+import { startP2P, stopP2P, sendToAllPeers } from "@/services/p2pService";
 
 interface UseNearbyConnectionsOptions {
   onPayloadReceived: (payload: BusPayload) => void;

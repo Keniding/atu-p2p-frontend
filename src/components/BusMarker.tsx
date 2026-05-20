@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Marker } from "react-native-maps";
-import type { NearbyBus } from "../types/bus.types";
-import { LIMA_BUS_LINES } from "../constants/lines";
+import type { NearbyBus } from "@/types/bus.types";
+import { LIMA_BUS_LINES } from "@/constants/lines";
 
 interface BusMarkerProps {
   bus: NearbyBus;

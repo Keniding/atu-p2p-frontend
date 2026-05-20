@@ -2,15 +2,15 @@ import { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import MapView, { PROVIDER_DEFAULT } from "react-native-maps";
 import { useLocalSearchParams } from "expo-router";
-import { useBusDetection } from "../../hooks/useBusDetection";
-import { useSupabaseFallback } from "../../hooks/useSupabaseFallback";
-import { scheduleArrivalNotification } from "../../services/notificationService";
-import BusMarker from "../../components/BusMarker";
-import P2PStatusBar from "../../components/P2PStatusBar";
-import LineSelector from "../../components/LineSelector";
-import { LIMA_BUS_LINES_FULL } from "../../constants/lines";
-import { ARRIVING_THRESHOLD_S } from "../../constants/config";
-import type { NearbyBus } from "../../types/bus.types";
+import { useBusDetection } from "@/hooks/useBusDetection";
+import { useSupabaseFallback } from "@/hooks/useSupabaseFallback";
+import { scheduleArrivalNotification } from "@/services/notificationService";
+import BusMarker from "@/components/BusMarker";
+import P2PStatusBar from "@/components/P2PStatusBar";
+import LineSelector from "@/components/LineSelector";
+import { LIMA_BUS_LINES_FULL } from "@/constants/lines";
+import { ARRIVING_THRESHOLD_S } from "@/constants/config";
+import type { NearbyBus } from "@/types/bus.types";
 
 const LIMA_CENTER = {
   latitude: -12.0464,

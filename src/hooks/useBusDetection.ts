@@ -17,16 +17,16 @@ import {
   Strategy,
   type Unsubscribe,
 } from "expo-nearby-connections";
-import type { BusPayload, NearbyBus, P2PState } from "../types/bus.types";
+import type { BusPayload, NearbyBus, P2PState } from "@/types/bus.types";
 import {
   SERVICE_ID,
   BROADCAST_INTERVAL_MS,
   MAX_DETECTION_RADIUS_M,
   BUS_TIMEOUT_MS,
   CLEANUP_INTERVAL_MS,
-} from "../constants/config";
-import { haversineDistance } from "../utils/haversine";
-import { estimateArrival, getBusStatus } from "../utils/etaCalculator";
+} from "@/constants/config";
+import { haversineDistance } from "@/utils/haversine";
+import { estimateArrival, getBusStatus } from "@/utils/etaCalculator";
 
 export function useBusDetection(busLineId: string, isDriver: boolean) {
   const [myLocation, setMyLocation] = useState<Location.LocationObject | null>(null);

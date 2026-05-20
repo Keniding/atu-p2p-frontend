@@ -6,11 +6,11 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-import { useBusDetection } from "../../hooks/useBusDetection";
-import { useBackgroundLocation } from "../../hooks/useBackgroundLocation";
-import P2PStatusBar from "../../components/P2PStatusBar";
-import LineSelector from "../../components/LineSelector";
-import { LIMA_BUS_LINES_FULL } from "../../constants/lines";
+import { useBusDetection } from "@/hooks/useBusDetection";
+import { useBackgroundLocation } from "@/hooks/useBackgroundLocation";
+import P2PStatusBar from "@/components/P2PStatusBar";
+import LineSelector from "@/components/LineSelector";
+import { LIMA_BUS_LINES_FULL } from "@/constants/lines";
 
 export default function DriverDashboard() {
   const [selectedLine, setSelectedLine] = useState(LIMA_BUS_LINES_FULL[0].id);

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "bun:test";
-import { serializePayload, deserializePayload } from "../../src/utils/busPayload";
-import type { BusPayload } from "../../src/types/bus.types";
+import { serializePayload, deserializePayload } from "@/utils/busPayload";
+import type { BusPayload } from "@/types/bus.types";
 
 const samplePayload: BusPayload = {
   deviceId: "device-001",

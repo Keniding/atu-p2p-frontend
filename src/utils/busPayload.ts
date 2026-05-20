@@ -1,4 +1,4 @@
-import type { BusPayload } from "../types/bus.types";
+import type { BusPayload } from "@/types/bus.types";
 
 export function serializePayload(payload: BusPayload): string {
   return JSON.stringify(payload);

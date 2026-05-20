@@ -6,7 +6,7 @@ import {
   sendText,
   Strategy,
 } from "expo-nearby-connections";
-import type { BusPayload } from "../types/bus.types";
+import type { BusPayload } from "@/types/bus.types";
 
 export async function startP2P(serviceId: string): Promise<void> {
   await startAdvertise(serviceId, Strategy.P2P_CLUSTER);

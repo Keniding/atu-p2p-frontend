@@ -7,7 +7,7 @@ import {
   Alert,
 } from "react-native";
 import { router } from "expo-router";
-import type { UserRole } from "../../types/bus.types";
+import type { UserRole } from "@/types/bus.types";
 
 export default function RoleSelectionScreen() {
   const [selected, setSelected] = useState<UserRole | null>(null);

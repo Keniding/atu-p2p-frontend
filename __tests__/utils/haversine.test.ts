@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { haversineDistance } from "../../src/utils/haversine";
+import { haversineDistance } from "@/utils/haversine";
 
 describe("haversineDistance", () => {
   it("debe retornar 0 para coordenadas identicas", () => {

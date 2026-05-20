@@ -1,10 +1,10 @@
 import { renderHook, act } from "@testing-library/react-native";
-import { usePermissions } from "../../src/hooks/usePermissions";
+import { usePermissions } from "@/hooks/usePermissions";
 
-jest.mock("../../src/services/locationService", () => ({
+jest.mock("@/services/locationService", () => ({
   requestLocationPermissions: jest.fn().mockResolvedValue(true),
 }));
-jest.mock("../../src/services/notificationService", () => ({
+jest.mock("@/services/notificationService", () => ({
   requestNotificationPermissions: jest.fn().mockResolvedValue(true),
   scheduleArrivalNotification: jest.fn(),
   cancelAllNotifications: jest.fn(),
@@ -30,7 +30,7 @@ describe("usePermissions", () => {
   });
 
   it("maneja error cuando falla el permiso", async () => {
-    const locationService = require("../../src/services/locationService");
+    const locationService = require("@/services/locationService");
     locationService.requestLocationPermissions.mockRejectedValueOnce(
       new Error("Permission denied by OS")
     );

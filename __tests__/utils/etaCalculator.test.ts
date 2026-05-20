@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { estimateArrival, getBusStatus } from "../../src/utils/etaCalculator";
+import { estimateArrival, getBusStatus } from "@/utils/etaCalculator";
 
 describe("estimateArrival", () => {
   it("debe retornar 999 si el bus esta detenido", () => {

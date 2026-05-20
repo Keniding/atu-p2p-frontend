@@ -6,13 +6,13 @@ import {
   StyleSheet,
   RefreshControl,
 } from "react-native";
-import { useBusDetection } from "../../hooks/useBusDetection";
-import { useSupabaseFallback } from "../../hooks/useSupabaseFallback";
-import BusCard from "../../components/BusCard";
-import P2PStatusBar from "../../components/P2PStatusBar";
-import LineSelector from "../../components/LineSelector";
-import { LIMA_BUS_LINES_FULL } from "../../constants/lines";
-import type { NearbyBus } from "../../types/bus.types";
+import { useBusDetection } from "@/hooks/useBusDetection";
+import { useSupabaseFallback } from "@/hooks/useSupabaseFallback";
+import BusCard from "@/components/BusCard";
+import P2PStatusBar from "@/components/P2PStatusBar";
+import LineSelector from "@/components/LineSelector";
+import { LIMA_BUS_LINES_FULL } from "@/constants/lines";
+import type { NearbyBus } from "@/types/bus.types";
 
 export default function BusListScreen() {
   const [selectedLine, setSelectedLine] = useState(LIMA_BUS_LINES_FULL[0].id);

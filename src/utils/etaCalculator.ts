@@ -1,5 +1,5 @@
-import type { BusStatus } from "../types/bus.types";
-import { ARRIVING_THRESHOLD_S, ENROUTE_THRESHOLD_S } from "../constants/config";
+import type { BusStatus } from "@/types/bus.types";
+import { ARRIVING_THRESHOLD_S, ENROUTE_THRESHOLD_S } from "@/constants/config";
 
 export function estimateArrival(distanceM: number, speedKmh: number): number {
   if (speedKmh < 1) return 999;

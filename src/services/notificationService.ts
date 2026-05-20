@@ -1,5 +1,5 @@
 import * as Notifications from "expo-notifications";
-import type { NearbyBus } from "../types/bus.types";
+import type { NearbyBus } from "@/types/bus.types";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import type { RealtimeChannel } from "@supabase/supabase-js";
-import type { BusPayload } from "../types/bus.types";
-import { upsertBusLocation, subscribeToBusLine, unsubscribe } from "../services/supabaseService";
+import type { BusPayload } from "@/types/bus.types";
+import { upsertBusLocation, subscribeToBusLine, unsubscribe } from "@/services/supabaseService";
 
 interface SupabaseFallbackState {
   isConnected: boolean;

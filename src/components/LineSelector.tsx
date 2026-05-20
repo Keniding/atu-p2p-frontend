@@ -5,7 +5,7 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import type { BusLine } from "../types/bus.types";
+import type { BusLine } from "@/types/bus.types";
 
 interface LineSelectorProps {
   lines: BusLine[];
