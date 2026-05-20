@@ -12,7 +12,7 @@ interface StatusBadgeProps {
   status: BusStatus;
 }
 
-export default function StatusBadge({ status }: StatusBadgeProps) {
+export default function StatusBadge({ status }: Readonly<StatusBadgeProps>) {
   const config = STATUS_CONFIG[status];
   return (
     <View style={[styles.badge, { backgroundColor: config.bg }]}>

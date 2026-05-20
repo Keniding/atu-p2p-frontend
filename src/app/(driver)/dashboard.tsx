@@ -106,7 +106,7 @@ interface StatBoxProps {
   color: string;
 }
 
-function StatBox({ icon, value, label, color }: StatBoxProps) {
+function StatBox({ icon, value, label, color }: Readonly<StatBoxProps>) {
   return (
     <View style={styles.statBox}>
       <Text style={styles.statIcon}>{icon}</Text>
@@ -121,7 +121,7 @@ interface StatusRowProps {
   active: boolean;
 }
 
-function StatusRow({ label, active }: StatusRowProps) {
+function StatusRow({ label, active }: Readonly<StatusRowProps>) {
   return (
     <View style={styles.statusRow}>
       <Text style={styles.statusLabel}>{label}</Text>

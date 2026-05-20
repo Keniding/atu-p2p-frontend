@@ -5,7 +5,7 @@ interface P2PStatusBarProps {
   p2pState: P2PState;
 }
 
-export default function P2PStatusBar({ p2pState }: P2PStatusBarProps) {
+export default function P2PStatusBar({ p2pState }: Readonly<P2PStatusBarProps>) {
   const { isDiscovering, connectedPeers, error } = p2pState;
 
   if (error) {
@@ -25,7 +25,7 @@ export default function P2PStatusBar({ p2pState }: P2PStatusBarProps) {
         </Text>
       </View>
       <Text style={styles.peersText}>
-        {connectedPeers.length} peer{connectedPeers.length !== 1 ? "s" : ""} conectado{connectedPeers.length !== 1 ? "s" : ""}
+        {connectedPeers.length} peer{connectedPeers.length === 1 ? "" : "s"} conectado{connectedPeers.length === 1 ? "" : "s"}
       </Text>
     </View>
   );

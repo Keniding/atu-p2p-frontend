@@ -1,32 +1,32 @@
-import { useState, useEffect, useRef } from "react";
+import {useEffect, useRef, useState} from "react";
 import * as Location from "expo-location";
 import {
-  startAdvertise,
-  stopAdvertise,
-  startDiscovery,
-  stopDiscovery,
-  requestConnection,
   acceptConnection,
-  onPeerFound,
-  onPeerLost,
-  onInvitationReceived,
   onConnected,
   onDisconnected,
+  onInvitationReceived,
+  onPeerFound,
+  onPeerLost,
   onTextReceived,
+  requestConnection,
   sendText,
+  startAdvertise,
+  startDiscovery,
+  stopAdvertise,
+  stopDiscovery,
   Strategy,
   type Unsubscribe,
 } from "expo-nearby-connections";
-import type { BusPayload, NearbyBus, P2PState } from "@/types/bus.types";
+import type {BusPayload, NearbyBus, P2PState} from "@/types/bus.types";
 import {
-  SERVICE_ID,
   BROADCAST_INTERVAL_MS,
-  MAX_DETECTION_RADIUS_M,
   BUS_TIMEOUT_MS,
   CLEANUP_INTERVAL_MS,
+  MAX_DETECTION_RADIUS_M,
+  SERVICE_ID,
 } from "@/constants/config";
-import { haversineDistance } from "@/utils/haversine";
-import { estimateArrival, getBusStatus } from "@/utils/etaCalculator";
+import {haversineDistance} from "@/utils/haversine";
+import {estimateArrival, getBusStatus} from "@/utils/etaCalculator";
 
 export function useBusDetection(busLineId: string, isDriver: boolean) {
   const [myLocation, setMyLocation] = useState<Location.LocationObject | null>(null);
@@ -77,8 +77,7 @@ export function useBusDetection(busLineId: string, isDriver: boolean) {
   useEffect(() => {
     (async () => {
       try {
-        const peerId = await startAdvertise(SERVICE_ID, Strategy.P2P_CLUSTER);
-        myPeerIdRef.current = peerId;
+        myPeerIdRef.current = await startAdvertise(SERVICE_ID, Strategy.P2P_CLUSTER);
         setP2PState((s) => ({ ...s, isAdvertising: true }));
         await startDiscovery(SERVICE_ID, Strategy.P2P_CLUSTER);
         setP2PState((s) => ({ ...s, isDiscovering: true }));
@@ -104,66 +103,58 @@ export function useBusDetection(busLineId: string, isDriver: boolean) {
           await requestConnection(peerId);
         } catch { /* peer may have moved away */ }
       })
-    );
-
-    subs.push(
-      onInvitationReceived(async ({ peerId }) => {
-        try {
-          await acceptConnection(peerId);
-        } catch { /* connection rejected */ }
-      })
-    );
-
-    subs.push(
-      onConnected(({ peerId }) => {
-        peersRef.current = [...peersRef.current, peerId];
-        setP2PState((s) => ({ ...s, connectedPeers: [...peersRef.current] }));
-      })
-    );
-
-    subs.push(
-      onDisconnected(({ peerId }) => {
-        peersRef.current = peersRef.current.filter((id) => id !== peerId);
-        setP2PState((s) => ({ ...s, connectedPeers: [...peersRef.current] }));
-      })
-    );
-
-    subs.push(
-      onPeerLost(({ peerId }) => {
-        peersRef.current = peersRef.current.filter((id) => id !== peerId);
-        setP2PState((s) => ({ ...s, connectedPeers: [...peersRef.current] }));
-      })
-    );
-
-    subs.push(
-      onTextReceived(({ text }) => {
-        try {
-          const busData: BusPayload = JSON.parse(text);
-          if (!busData.isBusDriver)            return;
-          if (busData.busLineId !== busLineId) return;
-          const myLoc = locationRef.current;
-          if (!myLoc) return;
-          const dist = haversineDistance(
-            myLoc.coords.latitude, myLoc.coords.longitude,
-            busData.latitude,      busData.longitude
-          );
-          if (dist > MAX_DETECTION_RADIUS_M) return;
-          const eta = estimateArrival(dist, busData.speed);
-          const nearbyBus: NearbyBus = {
-            ...busData,
-            distanceMeters:          Math.round(dist),
-            estimatedArrivalSeconds: eta,
-            status:                  getBusStatus(eta),
-            lastUpdated:             Date.now(),
-          };
-          setNearbyBuses((prev) => {
-            const filtered = prev.filter((b) => b.deviceId !== busData.deviceId);
-            return [...filtered, nearbyBus].sort(
-              (a, b) => a.estimatedArrivalSeconds - b.estimatedArrivalSeconds
+        ,
+        onInvitationReceived(async ({peerId}) => {
+          try {
+            await acceptConnection(peerId);
+          } catch { /* connection rejected */
+          }
+        })
+        ,
+        onConnected(({peerId}) => {
+          peersRef.current = [...peersRef.current, peerId];
+          setP2PState((s) => ({...s, connectedPeers: [...peersRef.current]}));
+        })
+        ,
+        onDisconnected(({peerId}) => {
+          peersRef.current = peersRef.current.filter((id) => id !== peerId);
+          setP2PState((s) => ({...s, connectedPeers: [...peersRef.current]}));
+        })
+        ,
+        onPeerLost(({peerId}) => {
+          peersRef.current = peersRef.current.filter((id) => id !== peerId);
+          setP2PState((s) => ({...s, connectedPeers: [...peersRef.current]}));
+        })
+        ,
+        onTextReceived(({text}) => {
+          try {
+            const busData: BusPayload = JSON.parse(text);
+            if (!busData.isBusDriver) return;
+            if (busData.busLineId !== busLineId) return;
+            const myLoc = locationRef.current;
+            if (!myLoc) return;
+            const dist = haversineDistance(
+                myLoc.coords.latitude, myLoc.coords.longitude,
+                busData.latitude, busData.longitude
             );
-          });
-        } catch { /* malformed JSON */ }
-      })
+            if (dist > MAX_DETECTION_RADIUS_M) return;
+            const eta = estimateArrival(dist, busData.speed);
+            const nearbyBus: NearbyBus = {
+              ...busData,
+              distanceMeters: Math.round(dist),
+              estimatedArrivalSeconds: eta,
+              status: getBusStatus(eta),
+              lastUpdated: Date.now(),
+            };
+            setNearbyBuses((prev) => {
+              const filtered = prev.filter((b) => b.deviceId !== busData.deviceId);
+              return [...filtered, nearbyBus].sort(
+                  (a, b) => a.estimatedArrivalSeconds - b.estimatedArrivalSeconds
+              );
+            });
+          } catch { /* malformed JSON */
+          }
+        })
     );
 
     return () => { subs.forEach((unsub) => unsub()); };

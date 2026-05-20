@@ -81,7 +81,7 @@ function RoleCard({
   selected,
   onPress,
   color,
-}: RoleCardProps) {
+}: Readonly<RoleCardProps>) {
   return (
     <TouchableOpacity
       style={[

@@ -6,7 +6,7 @@ interface BusCardProps {
   bus: NearbyBus;
 }
 
-export default function BusCard({ bus }: BusCardProps) {
+export default function BusCard({ bus }: Readonly<BusCardProps>) {
   const etaMinutes = Math.floor(bus.estimatedArrivalSeconds / 60);
   const etaSeconds = bus.estimatedArrivalSeconds % 60;
   const etaLabel =

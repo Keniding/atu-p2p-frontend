@@ -85,7 +85,7 @@ interface PermissionItemProps {
   granted: boolean;
 }
 
-function PermissionItem({ icon, title, description, granted }: PermissionItemProps) {
+function PermissionItem({ icon, title, description, granted }: Readonly<PermissionItemProps>) {
   return (
     <View style={styles.permissionItem}>
       <Text style={styles.permissionIcon}>{icon}</Text>

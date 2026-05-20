@@ -41,7 +41,7 @@ export default function PassengerLayout() {
   );
 }
 
-function TabIcon({ emoji, color }: { emoji: string; color: string }) {
+function TabIcon({ emoji, color }: Readonly<{ emoji: string; color: string }>) {
   return (
     <Text style={{ fontSize: 20, opacity: color === "#2563EB" ? 1 : 0.5 }}>
       {emoji}

@@ -57,48 +57,38 @@ export function useNearbyConnections({ onPayloadReceived }: UseNearbyConnections
           // peer may have moved
         }
       })
-    );
-
-    subs.push(
-      onInvitationReceived(async ({ peerId }) => {
-        try {
-          await acceptConnection(peerId);
-        } catch {
-          // connection may have been rejected
-        }
-      })
-    );
-
-    subs.push(
-      onConnected(({ peerId }) => {
-        peersRef.current = [...peersRef.current, peerId];
-        setP2PState((s) => ({ ...s, connectedPeers: [...peersRef.current] }));
-      })
-    );
-
-    subs.push(
-      onDisconnected(({ peerId }) => {
-        peersRef.current = peersRef.current.filter((id) => id !== peerId);
-        setP2PState((s) => ({ ...s, connectedPeers: [...peersRef.current] }));
-      })
-    );
-
-    subs.push(
-      onPeerLost(({ peerId }) => {
-        peersRef.current = peersRef.current.filter((id) => id !== peerId);
-        setP2PState((s) => ({ ...s, connectedPeers: [...peersRef.current] }));
-      })
-    );
-
-    subs.push(
-      onTextReceived(({ text }) => {
-        try {
-          const payload: BusPayload = JSON.parse(text);
-          onPayloadReceived(payload);
-        } catch {
-          // malformed payload
-        }
-      })
+        ,
+        onInvitationReceived(async ({peerId}) => {
+          try {
+            await acceptConnection(peerId);
+          } catch {
+            // connection may have been rejected
+          }
+        })
+        ,
+        onConnected(({peerId}) => {
+          peersRef.current = [...peersRef.current, peerId];
+          setP2PState((s) => ({...s, connectedPeers: [...peersRef.current]}));
+        })
+        ,
+        onDisconnected(({peerId}) => {
+          peersRef.current = peersRef.current.filter((id) => id !== peerId);
+          setP2PState((s) => ({...s, connectedPeers: [...peersRef.current]}));
+        })
+        ,
+        onPeerLost(({peerId}) => {
+          peersRef.current = peersRef.current.filter((id) => id !== peerId);
+          setP2PState((s) => ({...s, connectedPeers: [...peersRef.current]}));
+        })
+        ,
+        onTextReceived(({text}) => {
+          try {
+            const payload: BusPayload = JSON.parse(text);
+            onPayloadReceived(payload);
+          } catch {
+            // malformed payload
+          }
+        })
     );
 
     return () => {

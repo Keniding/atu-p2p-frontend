@@ -13,7 +13,7 @@ interface LineSelectorProps {
   onSelect: (id: string) => void;
 }
 
-export default function LineSelector({ lines, selected, onSelect }: LineSelectorProps) {
+export default function LineSelector({ lines, selected, onSelect }: Readonly<LineSelectorProps>) {
   return (
     <View style={styles.container}>
       <ScrollView

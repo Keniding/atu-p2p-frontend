@@ -8,7 +8,7 @@ interface BusMarkerProps {
   onPress?: () => void;
 }
 
-export default function BusMarker({ bus, onPress }: BusMarkerProps) {
+export default function BusMarker({ bus, onPress }: Readonly<BusMarkerProps>) {
   const lineInfo = LIMA_BUS_LINES.find((l) => l.id === bus.busLineId);
   const color = lineInfo?.color ?? "#2563EB";
 

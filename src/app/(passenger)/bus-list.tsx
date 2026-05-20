@@ -23,7 +23,7 @@ export default function BusListScreen() {
 
   const allBuses: NearbyBus[] = [...nearbyBuses];
   for (const serverBus of nearbyBusesFromServer) {
-    if (!allBuses.find((b) => b.deviceId === serverBus.deviceId)) {
+    if (!allBuses.some((b) => b.deviceId === serverBus.deviceId)) {
       allBuses.push({
         ...serverBus,
         distanceMeters: 0,
@@ -67,7 +67,7 @@ export default function BusListScreen() {
         }
         ListHeaderComponent={
           <Text style={styles.header}>
-            {allBuses.length} bus{allBuses.length !== 1 ? "es" : ""} detectado{allBuses.length !== 1 ? "s" : ""}
+            {allBuses.length} bus{allBuses.length === 1 ? "" : "es"} detectado{allBuses.length === 1 ? "" : "s"}
           </Text>
         }
       />

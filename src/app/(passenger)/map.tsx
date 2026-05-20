@@ -32,7 +32,7 @@ export default function MapScreen() {
 
   const allBuses: NearbyBus[] = [...nearbyBuses];
   for (const serverBus of nearbyBusesFromServer) {
-    if (!allBuses.find((b) => b.deviceId === serverBus.deviceId)) {
+    if (!allBuses.some((b) => b.deviceId === serverBus.deviceId)) {
       allBuses.push({
         ...serverBus,
         distanceMeters: 0,

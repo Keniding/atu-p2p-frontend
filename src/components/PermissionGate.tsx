@@ -11,7 +11,7 @@ export default function PermissionGate({
   children,
   fallback,
   isDriver = false,
-}: PermissionGateProps) {
+}: Readonly<PermissionGateProps>) {
   const { locationGranted } = usePermissions(isDriver);
 
   if (!locationGranted) {
