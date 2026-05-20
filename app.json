@@ -1,0 +1,72 @@
+{
+  "expo": {
+    "name": "BusLima P2P",
+    "slug": "buslima-p2p",
+    "version": "1.0.0",
+    "sdkVersion": "55.0.0",
+    "orientation": "portrait",
+    "newArchEnabled": true,
+    "icon": "./assets/images/icon.png",
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "plugins": [
+      [
+        "expo-nearby-connections",
+        {
+          "bonjourServicesName": "buslima",
+          "localNetworkUsagePermissionText": "BusLima necesita acceso a la red local para detectar buses cercanos",
+          "bluetoothUsagePermissionText": "BusLima usa Bluetooth para conectarse con otros pasajeros cercanos"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "BusLima necesita tu ubicacion para detectar buses en tu ruta.",
+          "locationAlwaysPermission": "BusLima necesita ubicacion en segundo plano para seguir tu ruta.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
+        }
+      ],
+      "expo-router",
+      "expo-notifications"
+    ],
+    "android": {
+      "package": "com.buslima.p2p",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_LOCATION",
+        "BLUETOOTH",
+        "BLUETOOTH_ADMIN",
+        "BLUETOOTH_SCAN",
+        "BLUETOOTH_CONNECT",
+        "BLUETOOTH_ADVERTISE",
+        "NEARBY_WIFI_DEVICES",
+        "ACCESS_WIFI_STATE",
+        "CHANGE_WIFI_STATE"
+      ]
+    },
+    "ios": {
+      "bundleIdentifier": "com.buslima.p2p",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "BusLima necesita tu ubicacion para detectar buses en tu ruta.",
+        "NSLocationWhenInUseUsageDescription": "BusLima necesita tu ubicacion para detectar buses cercanos.",
+        "NSLocationAlwaysUsageDescription": "BusLima necesita ubicacion en segundo plano cuando eres chofer.",
+        "UIBackgroundModes": ["location", "fetch"]
+      }
+    },
+    "web": {
+      "favicon": "./assets/images/favicon.png"
+    }
+  }
+}
