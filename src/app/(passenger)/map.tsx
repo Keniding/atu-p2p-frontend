@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import MapView, { PROVIDER_DEFAULT } from "react-native-maps";
 import { useLocalSearchParams } from "expo-router";

@@ -1,4 +1,3 @@
-import React from "react";
 import { renderHook } from "@testing-library/react-native";
 
 jest.mock("expo-location", () => ({

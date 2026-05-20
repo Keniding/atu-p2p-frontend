@@ -1,4 +1,3 @@
-import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import type { P2PState } from "../types/bus.types";
 
@@ -7,7 +6,7 @@ interface P2PStatusBarProps {
 }
 
 export default function P2PStatusBar({ p2pState }: P2PStatusBarProps) {
-  const { isAdvertising, isDiscovering, connectedPeers, error } = p2pState;
+  const { isDiscovering, connectedPeers, error } = p2pState;
 
   if (error) {
     return (

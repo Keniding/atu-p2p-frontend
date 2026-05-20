@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 import { useBusDetection } from "../../hooks/useBusDetection";
 import { useBackgroundLocation } from "../../hooks/useBackgroundLocation";
 import P2PStatusBar from "../../components/P2PStatusBar";
+import LineSelector from "../../components/LineSelector";
 import { LIMA_BUS_LINES_FULL } from "../../constants/lines";
 
 export default function DriverDashboard() {
@@ -31,6 +32,12 @@ export default function DriverDashboard() {
             {lineInfo?.name ?? selectedLine}
           </Text>
         </View>
+
+        <LineSelector
+          lines={LIMA_BUS_LINES_FULL}
+          selected={selectedLine}
+          onSelect={setSelectedLine}
+        />
 
         <View style={styles.statsRow}>
           <StatBox

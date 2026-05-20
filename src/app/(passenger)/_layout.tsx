@@ -1,4 +1,4 @@
-import React from "react";
+import { Text } from "react-native";
 import { Tabs } from "expo-router";
 
 export default function PassengerLayout() {
@@ -42,6 +42,9 @@ export default function PassengerLayout() {
 }
 
 function TabIcon({ emoji, color }: { emoji: string; color: string }) {
-  const { Text } = require("react-native");
-  return <Text style={{ fontSize: 20, opacity: color === "#2563EB" ? 1 : 0.5 }}>{emoji}</Text>;
+  return (
+    <Text style={{ fontSize: 20, opacity: color === "#2563EB" ? 1 : 0.5 }}>
+      {emoji}
+    </Text>
+  );
 }

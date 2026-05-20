@@ -1,4 +1,3 @@
-import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import type { NearbyBus } from "../types/bus.types";
 import StatusBadge from "./StatusBadge";

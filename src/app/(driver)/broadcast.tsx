@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Switch } from "react-native";
 import { useBackgroundLocation } from "../../hooks/useBackgroundLocation";
 import { LIMA_BUS_LINES_FULL } from "../../constants/lines";

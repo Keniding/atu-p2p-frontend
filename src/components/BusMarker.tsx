@@ -1,4 +1,3 @@
-import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Marker } from "react-native-maps";
 import type { NearbyBus } from "../types/bus.types";
